@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
 import { BillService } from '../shared/services/bill.service';
 import { Bill } from '../shared/models/bill.model';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'wfm-bill-page',
@@ -9,21 +10,40 @@ import { Bill } from '../shared/models/bill.model';
   styleUrls: ['./bill-page.component.scss']
 })
 export class BillPageComponent implements OnInit, OnDestroy {
-  subscription: Subscription;
+  sub1: Subscription;
+  sub2: Subscription;
+
+  currency: any;
+  bill: Bill;
+
+  isLoaded = false;
 
   constructor(private billService: BillService) { }
 
   ngOnInit() {
-    this.subscription = combineLatest(
+    this.sub1 = combineLatest(
       this.billService.getBill(),
       this.billService.getCurrency(),
     ).subscribe((data: [Bill, any]) => {
-      console.log(data);
+      this.bill = data[0];
+      this.currency = data[1];
+      this.isLoaded = true;
+      console.log(this.currency);
     });
   }
 
+  onRefresh() {
+    this.isLoaded = false;
+    this.sub2 = this.billService.getCurrency().pipe(delay(2000))
+      .subscribe((currency: any) => {
+        this.currency = currency;
+        this.isLoaded = true;
+      });
+  }
+
+
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.sub1.unsubscribe();
   }
 
 }
