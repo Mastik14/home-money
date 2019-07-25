@@ -24,14 +24,14 @@
       "id": 1
     },
     {
-      "name": "Еда",
-      "capacity": 10000,
+      "name": "",
+      "capacity": 7000,
       "id": 2
     },
     {
-      "id": 3,
-      "name": "Машина",
-      "capacity": 7000
+      "name": "",
+      "capacity": 2,
+      "id": 3
     }
   ],
   "events": [
