@@ -28,17 +28,22 @@ export class LoginComponent implements OnInit {
 
     this.route.queryParams
       .subscribe((params: Params) => {
-        if (params.nowCanLogin) {
+        if (params['nowCanLogin']) {
           this.showMessage({
             text: 'Теперь вы можете зайти в систему',
             type: 'success'
+          });
+        } else if (params['accessDenied']) {
+          this.showMessage({
+            text: 'Для работы с системой вам необходимо войти',
+            type: 'warning'
           });
         }
       });
 
     this.form = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
+      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'password': new FormControl(null, [Validators.required, Validators.minLength(6)])
     });
   }
 
